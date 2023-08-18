@@ -1,5 +1,7 @@
 import 'package:sqflite/sqflite.dart' as sql;
 
+import '../model/note.dart';
+
 class SqlHelper {
   static Future<void> createTable(sql.Database database) async {
     await database.execute('''
@@ -17,10 +19,10 @@ CREATE TABLE data(
     });
   }
 
-  static Future<int> createdata(String title, String? desc) async {
+  static Future<int> createdata(Note note) async {
     final db = await SqlHelper.db();
-    final data = {'title': title, 'desc': desc};
-    final id = await db.insert("data", data,
+    // final data = {'title': title, 'desc': desc};
+    final id = await db.insert("data", note.toJson(),
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
     return id;
   }
@@ -35,14 +37,15 @@ CREATE TABLE data(
     return db.query('data', where: 'id=?', whereArgs: [id], limit: 1);
   }
 
-  static Future<int> updatedata(int id, String title, String? desc) async {
+  static Future<int> updatedata(Note note) async {
     final db = await SqlHelper.db();
-    final data = {
-      'title': title,
-      'desc': desc,
-    };
-    final result =
-        await db.update('data', data, where: "id=?", whereArgs: [id]);
+    // final data = {
+    //   'title': title,
+    //   'desc': desc,
+    // };
+
+    final result = await db
+        .update('data', note.toJson(), where: "id=?", whereArgs: [note.id]);
     return result;
   }
 

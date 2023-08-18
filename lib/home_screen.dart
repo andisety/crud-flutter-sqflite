@@ -1,5 +1,7 @@
-import 'package:crud_db/db_helper.dart';
+import 'package:crud_db/databse/db_helper.dart';
 import 'package:flutter/material.dart';
+
+import 'model/note.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -96,12 +98,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _addData() async {
-    await SqlHelper.createdata(_titleController.text, _descController.text);
+    final Note note = Note(
+        id: null, title: _titleController.text, desc: _descController.text);
+    await SqlHelper.createdata(note);
     _refreshData();
   }
 
   Future<void> _updateData(int id) async {
-    await SqlHelper.updatedata(id, _titleController.text, _descController.text);
+    final Note note =
+        Note(id: id, title: _titleController.text, desc: _descController.text);
+    await SqlHelper.updatedata(note);
     _refreshData();
   }
 
